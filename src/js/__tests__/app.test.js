@@ -7,35 +7,55 @@ describe('Validator', () => {
         validator = new Validator();
     });
 
-    test('should validate a valid username', () => {
-        expect(validator.validateUsername('valid_username123')).toBe(true);
-        expect(validator.validateUsername('user-name123')).toBe(true);
-        expect(validator.validateUsername('username123')).toBe(true);
-        expect(validator.validateUsername('user123')).toBe(true);
+    describe('valid usernames', () => {
+        test.each([
+            'valid_username123',
+            'user-name123',
+            'username123',
+            'user123'
+        ])('should validate username: %s', (username) => {
+            expect(validator.validateUsername(username)).toBe(true);
+        });
     });
 
-    test('should invalidate usernames with four consecutive digits', () => {
-        expect(validator.validateUsername('1234user')).toBe(false);
-        expect(validator.validateUsername('user1234')).toBe(false);
-        expect(validator.validateUsername('user12345')).toBe(false);
+    describe('invalid usernames with four consecutive digits', () => {
+        test.each([
+            '1234user',
+            'user1234',
+            'user12345'
+        ])('should invalidate username: %s', (username) => {
+            expect(validator.validateUsername(username)).toBe(false);
+        });
     });
 
-    test('should invalidate usernames starting with _ or -', () => {
-        expect(validator.validateUsername('-username')).toBe(false);
-        expect(validator.validateUsername('_username')).toBe(false);
+    describe('invalid usernames starting with _ or -', () => {
+        test.each([
+            '-username',
+            '_username'
+        ])('should invalidate username: %s', (username) => {
+            expect(validator.validateUsername(username)).toBe(false);
+        });
     });
 
-    test('should invalidate usernames ending with _ or -', () => {
-        expect(validator.validateUsername('username-')).toBe(false);
-        expect(validator.validateUsername('username_')).toBe(false);
+    describe('invalid usernames ending with _ or -', () => {
+        test.each([
+            'username-',
+            'username_'
+        ])('should invalidate username: %s', (username) => {
+            expect(validator.validateUsername(username)).toBe(false);
+        });
     });
 
     test('should invalidate empty usernames', () => {
         expect(validator.validateUsername('')).toBe(false);
     });
 
-    test('should invalidate usernames with only special characters', () => {
-        expect(validator.validateUsername('---')).toBe(false);
-        expect(validator.validateUsername('___')).toBe(false);
+    describe('invalid usernames with only special characters', () => {
+        test.each([
+            '---',
+            '___'
+        ])('should invalidate username: %s', (username) => {
+            expect(validator.validateUsername(username)).toBe(false);
+        });
     });
 });
